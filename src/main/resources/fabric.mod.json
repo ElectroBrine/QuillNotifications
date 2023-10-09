@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "quill_notifications",
+  "version": "${version}",
+  "name": "Quill Notifications",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/darien/Quill Notifications"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/quill_notifications/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "client": [
+      "me.electrobrine.quill_notifications.client.QuillNotificationsClient"
+    ],
+    "main": [
+      "me.electrobrine.quill_notifications.QuillNotifications"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
