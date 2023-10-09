@@ -29,11 +29,9 @@ public class QuillNotifications implements ModInitializer {
     public static Config config = MicroConfig.getOrCreate("Quill Notifications", new Config());
     public static Table players;
     public static Table mailbox;
-    public static HashMap<UUID, ServerPlayerEntity> playerManager;
+    public static HashMap<UUID, ServerPlayerEntity> playerManager = new HashMap<>();
     @Override
     public void onInitialize() {
-
-
         Database database;
         if (Objects.equals(config.databaseType, "MYSQL")) {
             if (Objects.equals(config.databaseUser, "Quillium")) {
