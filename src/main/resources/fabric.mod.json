@@ -9,12 +9,9 @@
     "repo": "https://github.com/darien/Quill Notifications"
   },
   "license": "All-Rights-Reserved",
-  "icon": "assets/quill_notifications/icon.png",
+  "icon": "icon.png",
   "environment": "server",
   "entrypoints": {
-    "client": [
-      "me.electrobrine.quill_notifications.client.QuillNotificationsClient"
-    ],
     "main": [
       "me.electrobrine.quill_notifications.QuillNotifications"
     ]
@@ -22,6 +19,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "sqlib": ">=2.1.8",
+    "minecraft": ">=1.16.5"
   }
 }

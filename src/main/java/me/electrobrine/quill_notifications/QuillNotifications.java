@@ -36,18 +36,18 @@ public class QuillNotifications implements ModInitializer {
 
         Database database;
         if (Objects.equals(config.databaseType, "MYSQL")) {
-            database = new MySQLDatabase("Quill", config.databaseName, config.databaseIP, config.databasePort, config.databaseUser, config.databasePassword);
             if (Objects.equals(config.databaseUser, "Quillium")) {
                 log("Please provide a new database username", Level.ERROR);
                 return;
             }
+            database = new MySQLDatabase("Quill", config.databaseName, config.databaseIP, config.databasePort, config.databaseUser, config.databasePassword);
         }
         else {
-            database = new SQLiteDatabase("Quill", config.databaseName, config.databaseDirectory);
             if (Objects.equals(config.databaseDirectory,"/path/to/folder")) {
                 log("Please put in a valid folder path", Level.ERROR);
                 return;
             }
+            database = new SQLiteDatabase("Quill", config.databaseName, config.databaseDirectory);
         }
         log("dipping the ink quill", Level.INFO);
         players = database.createTable("Notifications")
