@@ -50,9 +50,8 @@ public class Pigeon {
             return;
         }
         QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(uuid, message, metadata, sound);
-        if (sound != null) {
+        if (sound != null)
             player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(sound), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
-        }
         player.sendMessage(message);
     }
 

@@ -6,6 +6,8 @@ import mc.microconfig.MicroConfig;
 import me.electrobrine.quill_notifications.api.Pigeon;
 import mrnavastar.sqlib.DataContainer;
 import mrnavastar.sqlib.Table;
+import mrnavastar.sqlib.database.Database;
+import mrnavastar.sqlib.database.MySQLDatabase;
 import mrnavastar.sqlib.database.SQLiteDatabase;
 import mrnavastar.sqlib.sql.SQLDataType;
 import net.fabricmc.api.ModInitializer;
@@ -30,12 +32,24 @@ public class QuillNotifications implements ModInitializer {
     public static HashMap<UUID, ServerPlayerEntity> playerManager;
     @Override
     public void onInitialize() {
-        if (Objects.equals(config.databaseDirectory,"/path/to/folder")) {
-            log("Please put in a valid folder path", Level.ERROR);
-            return;
+
+
+        Database database;
+        if (Objects.equals(config.databaseType, "MYSQL")) {
+            database = new MySQLDatabase("Quill", config.databaseName, config.databaseIP, config.databasePort, config.databaseUser, config.databasePassword);
+            if (Objects.equals(config.databaseUser, "Quillium")) {
+                log("Please provide a new database username", Level.ERROR);
+                return;
+            }
+        }
+        else {
+            database = new SQLiteDatabase("Quill", config.databaseName, config.databaseDirectory);
+            if (Objects.equals(config.databaseDirectory,"/path/to/folder")) {
+                log("Please put in a valid folder path", Level.ERROR);
+                return;
+            }
         }
         log("dipping the ink quill", Level.INFO);
-        SQLiteDatabase database = new SQLiteDatabase("Quill", "Notifications", config.databaseDirectory);
         players = database.createTable("Notifications")
                 .addColumn("messages", SQLDataType.JSON)
                 .finish();
