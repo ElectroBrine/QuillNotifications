@@ -3,12 +3,12 @@
   "id": "quill_notifications",
   "version": "${version}",
   "name": "Quill Notifications",
-  "description": "",
-  "authors": [],
+  "description": "A small Library mod to handle sending notifications to players both online and offline with style! ",
+  "authors": ["Electro_Brine"],
   "contact": {
-    "repo": "https://github.com/darien/Quill Notifications"
+    "repo": "https://github.com/ElectroBrine/QuillNotifications"
   },
-  "license": "All-Rights-Reserved",
+  "license": "CC0-1.0",
   "icon": "icon.png",
   "environment": "server",
   "entrypoints": {
