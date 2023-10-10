@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import me.electrobrine.quill_notifications.QuillNotifications;
 import me.electrobrine.quill_notifications.Style;
 import mrnavastar.sqlib.DataContainer;
+import net.kyori.adventure.platform.fabric.FabricAudiences;
+import net.kyori.adventure.text.Component;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,32 +19,31 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class Pigeon {
-    public static void send(UUID uuid, String message, Scribe style) {
-        send(uuid, Style.stylize(message, style), null, null);
-    }
+    public static void send(UUID uuid, String message, Scribe style) {send(uuid, Style.stylize(message, style), null, null);}
 
-    public static void send(UUID uuid, String message, Scribe style, JsonElement metadata) {
-        send(uuid, Style.stylize(message, style), metadata, null);
-    }
+    public static void send(UUID uuid, String message, Scribe style, JsonElement metadata) {send(uuid, Style.stylize(message, style), metadata, null);}
 
-    public static void send(UUID uuid, String message, Scribe style, SoundEvent sound) {
-        send(uuid, Style.stylize(message, style), null, sound);
-    }
+    public static void send(UUID uuid, String message, Scribe style, SoundEvent sound) {send(uuid, Style.stylize(message, style), null, sound);}
 
-    public static void send(UUID uuid, String message, Scribe style, JsonElement metadata, SoundEvent sound) {
-        send(uuid, Style.stylize(message, style), metadata, sound);
-    }
+    public static void send(UUID uuid, String message, Scribe style, JsonElement metadata, SoundEvent sound) {send(uuid, Style.stylize(message, style), metadata, sound);}
+
+    public static void send(UUID uuid, Component message) {send(uuid, (MutableText) FabricAudiences.nonWrappingSerializer().serialize(message), null, null);}
+
+    public static void send(UUID uuid, Component message, JsonElement metadata) {send(uuid, (MutableText) FabricAudiences.nonWrappingSerializer().serialize(message), metadata, null);}
+
+    public static void send(UUID uuid, Component message, SoundEvent sound) {send(uuid, (MutableText) FabricAudiences.nonWrappingSerializer().serialize(message), null, sound);}
+
+    public static void send(UUID uuid, Component message, JsonElement metadata, SoundEvent sound) {send(uuid, (MutableText) FabricAudiences.nonWrappingSerializer().serialize(message), metadata, sound);}
     public static void send(UUID uuid, MutableText message) {
         send(uuid, message, null, null);
     }
 
-    public static void send(UUID uuid, MutableText message, JsonElement metadata) {
-        send(uuid, message, metadata, null);
-    }
+    public static void send(UUID uuid, MutableText message, JsonElement metadata) {send(uuid, message, metadata, null);}
 
     public static void send(UUID uuid, MutableText message, SoundEvent sound) {
         send(uuid, message, null, sound);
     }
+
     public static void send(UUID uuid, MutableText message, JsonElement metadata, SoundEvent sound) {
         ServerPlayerEntity player = QuillNotifications.playerManager.get(uuid);
         if (player == null) {
