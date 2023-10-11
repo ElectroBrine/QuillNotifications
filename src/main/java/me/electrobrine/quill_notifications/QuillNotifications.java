@@ -71,8 +71,15 @@ public class QuillNotifications implements ModInitializer {
                 else sound = SoundEvent.of(messageData.getIdentifier("sound"));
                 Pigeon.send(playerUUID, messageData.getMutableText("text"), messageData.getJson("metadata"), sound);
                 mailbox.drop(message.getAsInt());
+                JsonArray newMessages = messages.deepCopy();
+                newMessages.remove(message);
+                data.put("messages", newMessages);
             }
         }));
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            UUID playerUUID = handler.getPlayer().getUuid();
+            playerManager.remove(playerUUID);
+        });
     }
     private static void log(String message, Level level) {
         LogManager.getLogger().log(level, "[Quill Notifications] " + message);

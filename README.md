@@ -1,7 +1,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)\
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-<img src="https://raw.githubusercontent.com/ElectroBrine/QuillNotifications/master/src/main/resources/icon.png" width="300" height="300">
+<img src="https://raw.githubusercontent.com/ElectroBrine/QuillNotifications/master/src/main/resources/icon.png" width="300" height="300" alt="">
 
 # Quill Notifications
 A small Library mod to handle sending notifications to players both online and offline with style! 
@@ -31,12 +31,16 @@ Pigeon.send(playerUUID, "Hello World!", Scribe.INFO);              // Send a not
 Pigeon.send(playerUUID, mutableText);                              // Send a notification with a custom mutable text
 Pigeon.send(playerUUID, mutableText, jsonData);                     // Send a notification with custom metadata that can be used in the event system;
 Pigeon.send(playerUUID, mutableText, SoundEvents.BLOCK_BELL_USE);  // Send a notification with a custom mutable text and play a sound
+Pigeon.send(playerUUID, adventureAPITextComponent); // Send a notification using Adventure API's special formatting
 ```
 
 ### Event System
 ``` java
 QuillEvents.PRE_SEND_NOTIFICATION.register((receiver, message, metadata, sound) -> {
   System.out.println(receiver);
+  //returning true allows the message to be sent, returning false will stop the
+  //returning false will stop the message from being seen
+  return true;
   // Do cool things with metadata or the other varibles idk the event system is your oyster.
 });
 ```
