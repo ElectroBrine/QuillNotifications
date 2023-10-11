@@ -51,10 +51,10 @@ public class Pigeon {
             return;
         }
         Component messageAsComponent = FabricAudiences.nonWrappingSerializer().deserialize(message);
-        QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(uuid, messageAsComponent, metadata, sound);
+        if (!QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(uuid, messageAsComponent, metadata, sound)) return;
         if (sound != null)
             player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(sound), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
-        player.sendMessage(message);
+        player.sendMessage(messageAsComponent);
     }
 
     private static void store(UUID uuid, MutableText text, JsonElement metadata, SoundEvent sound) {
