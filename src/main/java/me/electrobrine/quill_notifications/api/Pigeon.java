@@ -50,7 +50,8 @@ public class Pigeon {
             store(uuid, message, metadata, sound);
             return;
         }
-        QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(uuid, message, metadata, sound);
+        Component messageAsComponent = FabricAudiences.nonWrappingSerializer().deserialize(message);
+        QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(uuid, messageAsComponent, metadata, sound);
         if (sound != null)
             player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(sound), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
         player.sendMessage(message);
