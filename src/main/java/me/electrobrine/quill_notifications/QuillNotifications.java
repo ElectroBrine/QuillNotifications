@@ -36,14 +36,14 @@ public class QuillNotifications implements ModInitializer {
         if (Objects.equals(config.databaseType, "MYSQL")) {
             if (Objects.equals(config.databaseUser, "Quillium")) {
                 log("Please provide a new database username", Level.ERROR);
-                return;
+                System.exit(1);
             }
             database = new MySQLDatabase("Quill", config.databaseName, config.databaseIP, config.databasePort, config.databaseUser, config.databasePassword);
         }
         else {
             if (Objects.equals(config.databaseDirectory,"/path/to/folder")) {
                 log("Please put in a valid folder path", Level.ERROR);
-                return;
+                System.exit(1);
             }
             database = new SQLiteDatabase("Quill", config.databaseName, config.databaseDirectory);
         }

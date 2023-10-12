@@ -1,10 +1,14 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 version = project.mod_version
 group = project.maven_group
+
+
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -30,12 +34,25 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modImplementation("maven.modrinth:sqlib:2.1.8")
-    modImplementation include('com.github.P03W:Microconfig:2.2.1')
+    modImplementation('com.github.P03W:Microconfig:2.2.1')
     modImplementation include("net.kyori:adventure-platform-fabric:5.10.0")
 
-    //dev stuff because Ethan bullies me
+    //dev stuff because Ethan bullies me, please send help
     modImplementation("maven.modrinth:easy-eula:1.0.0")
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
 }
+
+shadowJar {
+    dependencies {
+        include(dependency("com.github.P03W:Microconfig:.*"))
+    }
+}
+jar.finalizedBy(shadowJar)
+//tasks.named('shadowJar', ShadowJar) {
+//    enableRelocation true
+//    relocationPrefix "quill"
+//}
 
 processResources {
     inputs.property "version", project.version

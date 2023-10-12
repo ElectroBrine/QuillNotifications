@@ -10,15 +10,15 @@ import net.minecraft.text.MutableText;
 import java.util.UUID;
 
 public class QuillEvents {
-    public static final Event<PRE_SEND_NOTIFICATION> PRE_SEND_NOTIFICATION = EventFactory.createArrayBacked(PRE_SEND_NOTIFICATION.class, callbacks -> (receiver, message, metadata, sound) -> {
+    public static final Event<PRE_SEND_NOTIFICATION> PRE_SEND_NOTIFICATION = EventFactory.createArrayBacked(PRE_SEND_NOTIFICATION.class, callbacks -> (message) -> {
         for (PRE_SEND_NOTIFICATION callback : callbacks) {
-            return callback.trigger(receiver, message, metadata, sound);
+            return callback.trigger(message);
         }
         return true;
     });
 
     @FunctionalInterface
     public interface PRE_SEND_NOTIFICATION {
-        boolean trigger(UUID receiver, Component message, JsonElement metadata, SoundEvent sound);
+        boolean trigger(Pigeon.Message message);
     }
 }

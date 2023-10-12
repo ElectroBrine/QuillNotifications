@@ -2,6 +2,7 @@ package me.electrobrine.quill_notifications.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import lombok.Data;
 import me.electrobrine.quill_notifications.QuillNotifications;
 import me.electrobrine.quill_notifications.Style;
 import mrnavastar.sqlib.DataContainer;
@@ -17,8 +18,23 @@ import net.minecraft.text.MutableText;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
-
 public class Pigeon {
+    @Data
+    public static class Message {
+        private UUID uuid;
+        private MutableText text;
+        private Component component;
+        private JsonElement metadata;
+        private SoundEvent sound;
+
+        public Message(UUID uuid, MutableText text, Component component, JsonElement metadata, SoundEvent sound) {
+            this.uuid = uuid;
+            this.text = text;
+            this.component = component;
+            this.metadata = metadata;
+            this.sound = sound;
+        }
+    }
     public static void send(UUID uuid, String message, Scribe style) {send(uuid, Style.stylize(message, style), null, null);}
 
     public static void send(UUID uuid, String message, Scribe style, JsonElement metadata) {send(uuid, Style.stylize(message, style), metadata, null);}
@@ -51,10 +67,13 @@ public class Pigeon {
             return;
         }
         Component messageAsComponent = FabricAudiences.nonWrappingSerializer().deserialize(message);
-        if (!QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(uuid, messageAsComponent, metadata, sound)) return;
+        Message message1 = new Message(uuid, message, messageAsComponent, metadata, sound);
+        if (!QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(message1)) return;
+
         if (sound != null)
-            player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(sound), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
-        player.sendMessage(messageAsComponent);
+            player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(message1.sound), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
+        if (!message.equals(message1.text)) player.sendMessage(message1.text);
+        else player.sendMessage(message1.component);
     }
 
     private static void store(UUID uuid, MutableText text, JsonElement metadata, SoundEvent sound) {
