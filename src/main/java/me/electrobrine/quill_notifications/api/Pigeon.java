@@ -2,7 +2,8 @@ package me.electrobrine.quill_notifications.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import me.electrobrine.quill_notifications.QuillNotifications;
 import me.electrobrine.quill_notifications.Style;
 import mrnavastar.sqlib.DataContainer;
@@ -19,12 +20,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 public class Pigeon {
-    @Data
+    @Getter
     public static class Message {
-        private UUID uuid;
+        private final UUID uuid;
+        @Setter
         private MutableText text;
+        @Setter
         private Component component;
+        @Setter
         private JsonElement metadata;
+        @Setter
         private SoundEvent sound;
 
         public Message(UUID uuid, MutableText text, Component component, JsonElement metadata, SoundEvent sound) {
