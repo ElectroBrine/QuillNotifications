@@ -4,10 +4,12 @@
 <img src="https://raw.githubusercontent.com/ElectroBrine/QuillNotifications/master/src/main/resources/icon.png" width="300" height="300" alt="">
 
 # Quill Notifications
-A small Library mod to handle sending notifications to players both online and offline with style! 
+A small Library mod to handle sending notifications to players both online and offline with style!
 
 # Usage
 This mod requires both [Fabric API](https://modrinth.com/mod/fabric-api) and [SQLib](https://modrinth.com/mod/sqlib).
+
+Use of [Adventure API](https://docs.advntr.dev/index.html) is not required but encouraged.
 
 Once the mod is installed on your server, a config will be generated after the first launch. Be sure to edit this config and point it to a file path or a my sql database.
 
@@ -18,10 +20,18 @@ To include this mod in your project simply add it as a dependency:
 ``` gradle
 repositories {
     maven { url "https://api.modrinth.com/maven" }
+    // adventure api is not strictly necessary but is helpful and will allow the use of the event system
+    maven {
+        name = "sonatype-oss-snapshots1"
+        url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+        mavenContent { snapshotsOnly() }
+    }
 }
 
 dependencies {
-  modImplementation("maven.modrinth:quill:1.0.0")
+    modImplementation("maven.modrinth:quill:1.0.3")
+    // adventure api is not strictly necessary but is helpful and will allow the use of the event system
+    modImplementation include("net.kyori:adventure-platform-fabric:5.10.0")
 }
 ```
 
