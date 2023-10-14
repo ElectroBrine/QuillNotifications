@@ -7,7 +7,7 @@
 A small Library mod to handle sending notifications to players both online and offline with style!
 
 # Usage
-This mod requires both [Fabric API](https://modrinth.com/mod/fabric-api) and [SQLib](https://modrinth.com/mod/sqlib).
+This mod requires both [Fabric API](https://modrinth.com/mod/fabric-api), [SQLib](https://modrinth.com/mod/sqlib), and [Micro Config](https://github.com/SilverAndro/Microconfig).
 
 Use of [Adventure API](https://docs.advntr.dev/index.html) is not required but encouraged.
 
@@ -46,7 +46,17 @@ Pigeon.send(playerUUID, adventureAPITextComponent); // Send a notification using
 
 ### Event System
 ``` java
-QuillEvents.PRE_SEND_NOTIFICATION.register((receiver, message, metadata, sound) -> {
+/*
+ 'message' is a object in Pigeon that holds the 
+ UUID of the receiver, 
+ MutableText of the message, 
+ Component of the message, 
+ JsonElement of the metadata,
+ and SoundEvent of sound. 
+ This allows you to edit everything (but the uuid) 
+ before the message actually sends to the users
+*/
+QuillEvents.PRE_SEND_NOTIFICATION.register((message) -> {
   System.out.println(receiver);
   //returning true allows the message to be sent, returning false will stop the
   //returning false will stop the message from being seen
