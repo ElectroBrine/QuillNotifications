@@ -30,7 +30,7 @@ jobs:
         run: |
           mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar; 
           mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-javadoc.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-javadoc.jar;
-          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-sources.jar ${{ github.workspace }}/Quill-Notifications-{{ github.ref_name }}-sources.jar;
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-sources.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-sources.jar;
 
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
