@@ -37,14 +37,15 @@ dependencies {
 
 ### General Usage
 ``` java
-NotificationBuilder notification = new NotificationBuilder(receiverUUID); // Initalize a new notification to be sent
-notification.setMessage(message); // setMessage() accepts String, MutableText, or Component variables (note that the notification will only save the last message set)
-notification.setStyle(Scribe.INFO); // setStyle() only works for String messages
-notification.setMetadata(jsonData); // inject json data into a message to be used with the event system
-notification.setSound(SoundEvents.BLOCK_BELL_USE); // set a soundevent to be played when notification is received
-notification.setCommands(commandString, commandString2); // set commands to be run when the notification is received
-notification.setCommandDelay(10, TimeUnit.SECONDS); // set a delay that your commands will delayed for after the notification is sent (you can also pass in just a number for the ammount of millies to delay by)
-Pigeon.send(notification.build()); // send the notification to the player
+Notification notification = NotificationBuilder.Notification(receiverUUID) // Initalize a new notification to be sent
+    .setMessage(message) // setMessage() accepts String, MutableText, or Component variables (note that the notification will only save the last message set)
+    .setStyle(Scribe.INFO) // setStyle() only works for String messages
+    .setMetadata(jsonData) // inject json data into a message to be used with the event system
+    .setSound(SoundEvents.BLOCK_BELL_USE) // set a soundevent to be played when notification is received
+    .setCommands(commandString, commandString2) // set commands to be run when the notification is received
+    .setCommandDelay(10, TimeUnit.SECONDS) // set a delay that your commands will delayed for after the notification is sent (you can also pass in just a number for the ammount of millies to delay by)
+    .build();
+Pigeon.send(notification); // send the notification to the player
 ```
 
 ### Event System
