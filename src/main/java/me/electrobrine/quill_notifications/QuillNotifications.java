@@ -29,10 +29,10 @@ public class QuillNotifications implements ModInitializer {
     @Override
     public void onInitialize() {
         log("dipping the ink quill", Level.INFO);
-        players = SQLib.getDatabase().createTable("Notifications")
+        players = SQLib.getDatabase().createTable("Quill","Notifications")
                 .addColumn("messages", SQLDataType.JSON)
                 .finish();
-        mailbox = SQLib.getDatabase().createTable("messages")
+        mailbox = SQLib.getDatabase().createTable("Quill", "messages")
                 .addColumn("text", SQLDataType.MUTABLE_TEXT)
                 .addColumn("metadata", SQLDataType.JSON)
                 .addColumn("sound", SQLDataType.IDENTIFIER)
@@ -62,7 +62,7 @@ public class QuillNotifications implements ModInitializer {
                     }
                     notification.setCommands(stringCommands.toArray(String[] :: new));
                 }
-                notification.setCommandDelay((long) messageData.getDouble("commandDelay"));
+                notification.setCommandDelay(messageData.getLong("commandDelay"));
                 Pigeon.send(notification.build());
                 notification.build().getPlayerEntity().getName().getString();
                 mailbox.drop(message.getAsInt());

@@ -61,7 +61,7 @@ public class Pigeon {
             }
             message.put("commands", jsonCommands);
         }
-        message.put("commandDelay", (double) notification.getCommandDelay());
+        message.put("commandDelay", notification.getCommandDelay());
         DataContainer player = QuillNotifications.players.get(notification.getUuid());
         JsonArray messages = new JsonArray();
         if (player == null) {
