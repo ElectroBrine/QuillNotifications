@@ -49,8 +49,7 @@ Pigeon.send(notification.build()); // send the notification to the player
 
 ### Event System
 ``` java
-/*
-    the event system gives you a notification object to modify the notification data before it gets sent
+//the event system gives you a notification object to modify the notification data before it gets sent
 QuillEvents.PRE_SEND_NOTIFICATION.register((notification) -> {
   System.out.println(notification.getPlayerEntity().getName().getString());
   //returning true allows the message to be sent, returning false will stop the
