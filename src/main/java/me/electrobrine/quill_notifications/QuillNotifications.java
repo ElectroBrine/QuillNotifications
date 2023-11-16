@@ -40,7 +40,7 @@ public class QuillNotifications implements ModInitializer {
                 .addColumn("commandDelay", SQLDataType.DOUBLE)
                 .setAutoIncrement()
                 .finish();
-        // CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> NotifyCommand.registerCommand(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> NotifyCommand.registerCommand(dispatcher));
         ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             UUID playerUUID = player.getUuid();
