@@ -2,7 +2,7 @@ package me.electrobrine.quill_notifications;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import me.electrobrine.quill_notifications.api.Pigeon;
+import me.electrobrine.quill_notifications.api.NotificationBuilder;
 import me.mrnavastar.sqlib.DataContainer;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.Table;
@@ -18,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class QuillNotifications implements ModInitializer {
     /**
@@ -37,7 +38,7 @@ public class QuillNotifications implements ModInitializer {
                 .addColumn("metadata", SQLDataType.JSON)
                 .addColumn("sound", SQLDataType.IDENTIFIER)
                 .addColumn("commands", SQLDataType.JSON)
-                .addColumn("commandDelay", SQLDataType.DOUBLE)
+                .addColumn("commandDelay", SQLDataType.LONG)
                 .setAutoIncrement()
                 .finish();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> NotifyCommand.registerCommand(dispatcher));
@@ -52,7 +53,7 @@ public class QuillNotifications implements ModInitializer {
             if (messages == null) return;
             for (JsonElement message : messages) {
                 DataContainer messageData = mailbox.get(message.getAsInt());
-                notification.setMessage(messageData.getMutableText("text"));
+                if (messageData.getMutableText("text") != null) notification.setMessage(messageData.getMutableText("text"));
                 if (messageData.getIdentifier("sound") != null) notification.setSound(SoundEvent.of(messageData.getIdentifier("sound")));
                 if (messageData.getJson("metadata") != null) notification.setMetadata(messageData.getJson("metadata"));
                 if (messageData.getJson("commands") != null) {

@@ -1,12 +1,11 @@
-package me.electrobrine.quill_notifications;
+package me.electrobrine.quill_notifications.api;
 
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
-import me.electrobrine.quill_notifications.api.Pigeon;
-import me.electrobrine.quill_notifications.api.Scribe;
+import me.electrobrine.quill_notifications.Notification;
+import me.electrobrine.quill_notifications.Style;
 import net.kyori.adventure.platform.fabric.FabricAudiences;
 import net.kyori.adventure.text.Component;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 

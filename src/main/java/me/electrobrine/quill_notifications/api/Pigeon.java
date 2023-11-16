@@ -48,7 +48,9 @@ public class Pigeon {
 
     private static void store(Notification notification) {
         DataContainer message = QuillNotifications.mailbox.createDataContainerAutoID();
-        message.put("text", notification.getMessage());
+        if (notification.getMessage() != null) {
+            message.put("text", notification.getMessage());
+        }
         if (notification.getMetadata() != null) {
             message.put("metadata", notification.getMetadata());
         }
@@ -63,15 +65,9 @@ public class Pigeon {
             message.put("commands", jsonCommands);
         }
         message.put("commandDelay", notification.getCommandDelay());
-        DataContainer player = QuillNotifications.players.get(notification.getUuid());
-        JsonArray messages = new JsonArray();
-        if (player == null) {
-            player = QuillNotifications.players.createDataContainer(notification.getUuid());
-            messages.add(message.getIdAsInt());
-            player.put("messages", messages);
-            return;
-        }
-        messages = (JsonArray) player.getJson("messages");
+        DataContainer player = QuillNotifications.players.getOrCreateDataContainer(notification.getUuid());
+        JsonArray messages = (JsonArray) player.getJson("messages");
+        if (messages == null) messages = new JsonArray();
         messages.add(message.getIdAsInt());
         player.put("messages", messages);
     }
