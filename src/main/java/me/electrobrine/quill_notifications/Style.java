@@ -1,11 +1,13 @@
 package me.electrobrine.quill_notifications;
 
+import me.electrobrine.quill_notifications.api.Scribe;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 public class Style {
     public static MutableText stylize(String message, me.electrobrine.quill_notifications.api.Scribe type) {
+        if (type == null) type = Scribe.NONE;
         return switch (type) {
             case ACHIEVEMENT -> Text.literal(message).formatted(Formatting.AQUA);
             case INFO -> Text.literal(message).formatted(Formatting.ITALIC).formatted(Formatting.GREEN);

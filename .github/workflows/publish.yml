@@ -27,11 +27,18 @@ jobs:
         run: ./gradlew build
 
       - name: Rename File
-        run: mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar
+        run: |
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar; 
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-javadoc.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-javadoc.jar;
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-sources.jar ${{ github.workspace }}/Quill-Notifications-{{ github.ref_name }}-sources.jar;
 
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar
+          files: |
+            ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar
+            ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-javadoc.jar
+            ${{ github.workspace }}/Quill-Notifications-{{ github.ref_name }}-sources.jar
+            java: 17
           java: 17

@@ -20,7 +20,7 @@ To include this mod in your project simply add it as a dependency:
 ``` gradle
 repositories {
     maven { url "https://api.modrinth.com/maven" }
-    // adventure api is not strictly necessary but is helpful and will allow the use of the event system
+    // adventure api is not strictly necessary but is helpful and will allow you to use Component messages
     maven {
         name = "sonatype-oss-snapshots1"
         url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
@@ -30,34 +30,29 @@ repositories {
 
 dependencies {
     modImplementation("maven.modrinth:quill:1.0.3")
-    // adventure api is not strictly necessary but is helpful and will allow the use of the event system
+    // adventure api is not strictly necessary but is helpful and allow you to use Component messages
     modImplementation include("net.kyori:adventure-platform-fabric:5.10.0")
 }
 ```
 
 ### General Usage
 ``` java
-Pigeon.send(playerUUID, "Hello World!", Scribe.INFO);              // Send a notification with basic formatting
-Pigeon.send(playerUUID, mutableText);                              // Send a notification with a custom mutable text
-Pigeon.send(playerUUID, mutableText, jsonData);                     // Send a notification with custom metadata that can be used in the event system;
-Pigeon.send(playerUUID, mutableText, SoundEvents.BLOCK_BELL_USE);  // Send a notification with a custom mutable text and play a sound
-Pigeon.send(playerUUID, adventureAPITextComponent); // Send a notification using Adventure API's special formatting
+NotificationBuilder notification = new NotificationBuilder(receiverUUID); // Initalize a new notification to be sent
+notification.setMessage(message); // setMessage() accepts String, MutableText, or Component variables (note that the notification will only save the last message set)
+notification.setStyle(Scribe.INFO); // setStyle() only works for String messages
+notification.setMetadata(jsonData); // inject json data into a message to be used with the event system
+notification.setSound(SoundEvents.BLOCK_BELL_USE); // set a soundevent to be played when notification is received
+notification.setCommands(commandString, commandString2); // set commands to be run when the notification is received
+notification.setCommandDelay(10, TimeUnit.SECONDS); // set a delay that your commands will delayed for after the notification is sent (you can also pass in just a number for the ammount of millies to delay by)
+Pigeon.send(notification.build()); // send the notification to the player
 ```
 
 ### Event System
 ``` java
 /*
- 'message' is a object in Pigeon that holds the 
- UUID of the receiver, 
- MutableText of the message, 
- Component of the message, 
- JsonElement of the metadata,
- and SoundEvent of sound. 
- This allows you to edit everything (but the uuid) 
- before the message actually sends to the users
-*/
-QuillEvents.PRE_SEND_NOTIFICATION.register((message) -> {
-  System.out.println(receiver);
+    the event system gives you a notification object to modify the notification data before it gets sent
+QuillEvents.PRE_SEND_NOTIFICATION.register((notification) -> {
+  System.out.println(notification.getPlayerEntity().getName().getString());
   //returning true allows the message to be sent, returning false will stop the
   //returning false will stop the message from being seen
   return true;

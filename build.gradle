@@ -2,12 +2,11 @@ plugins {
     id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'io.freefair.lombok' version '8.4'
 }
 
 version = project.mod_version
 group = project.maven_group
-
-
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -32,11 +31,10 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation("maven.modrinth:sqlib:2.1.8")
-    modImplementation include('com.github.P03W:Microconfig:2.2.1')
+    modImplementation("maven.modrinth:sqlib:2.2.1")
     modImplementation include("net.kyori:adventure-platform-fabric:5.10.0")
 
-    //dev stuff because Ethan bullies me, please send help
+    //dev stuff because MrNavaStar bullies me, please send help
     modImplementation("maven.modrinth:easy-eula:1.0.0")
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
@@ -76,6 +74,8 @@ java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
+    javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+    withJavadocJar()
     withSourcesJar()
 }
 
@@ -100,4 +100,11 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+sourcesJar {
+    exclude {
+        sourceSets.main.allSource.contains it.file
+    }
+    from delombok
 }
