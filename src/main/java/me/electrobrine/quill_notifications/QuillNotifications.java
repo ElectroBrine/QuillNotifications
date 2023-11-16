@@ -63,7 +63,7 @@ public class QuillNotifications implements ModInitializer {
                     notification.setCommands(stringCommands.toArray(String[] :: new));
                 }
                 notification.setCommandDelay(messageData.getLong("commandDelay"));
-                Pigeon.send(notification.build());
+                notification.send();
                 notification.build().getPlayerEntity().getName().getString();
                 mailbox.drop(message.getAsInt());
                 JsonArray newMessages = messages.deepCopy();

@@ -2,6 +2,7 @@ package me.electrobrine.quill_notifications;
 
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
+import me.electrobrine.quill_notifications.api.Pigeon;
 import me.electrobrine.quill_notifications.api.Scribe;
 import net.kyori.adventure.platform.fabric.FabricAudiences;
 import net.kyori.adventure.text.Component;
@@ -87,8 +88,8 @@ public class NotificationBuilder {
         return this;
     }
 
-    public NotificationBuilder setCommandDelay(long time) {
-        this.commandDelay = time;
+    public NotificationBuilder setCommandDelay(long timeMillis) {
+        this.commandDelay = timeMillis;
         return this;
     }
 
@@ -100,5 +101,9 @@ public class NotificationBuilder {
             message = (MutableText) FabricAudiences.nonWrappingSerializer().serialize(componentMessage);
         }
         return new Notification(uuid, null, message, FabricAudiences.nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay);
+    }
+
+    public void send() {
+        Pigeon.send(this.build());
     }
 }

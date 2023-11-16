@@ -36,6 +36,7 @@ public class Pigeon {
                 assert server != null;
                 CommandManager commandManager = server.getCommandManager();
                 for (String command : notification.getCommands()) {
+                    if (!command.startsWith("/")) command = "/" + command;
                     commandManager.executeWithPrefix(server.getCommandSource(), command);
                 }
             }).start();
