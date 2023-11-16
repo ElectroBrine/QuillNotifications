@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 
+import me.electrobrine.quill_notifications.api.NotificationBuilder;
 import me.electrobrine.quill_notifications.api.Pigeon;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.GameProfileArgumentType;
@@ -22,7 +23,8 @@ public class NotifyCommand {
                         .then(CommandManager.argument("player", GameProfileArgumentType.gameProfile()).suggests((context, builder) -> {
                             PlayerManager playerManager = context.getSource().getServer().getPlayerManager();
                             return CommandSource.suggestMatching(playerManager.getPlayerList().stream().map((player -> player.getGameProfile().getName())), builder);
-                        }).then(CommandManager.argument("message", MessageArgumentType.message()).executes(context -> notify(context, GameProfileArgumentType.getProfileArgument(context, "player"), MessageArgumentType.getMessage(context, "message"))))));
+                        }).then(CommandManager.argument("message", MessageArgumentType.message()).executes(context -> notify(context, GameProfileArgumentType.getProfileArgument(context, "player"), MessageArgumentType.getMessage(context, "message")))
+                         )));
     }
 
 

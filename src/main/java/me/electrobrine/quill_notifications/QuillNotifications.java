@@ -18,7 +18,6 @@ import org.apache.logging.log4j.LogManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class QuillNotifications implements ModInitializer {
     /**
