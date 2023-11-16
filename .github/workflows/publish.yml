@@ -18,7 +18,7 @@ jobs:
         with:
           file: src/main/resources/fabric.mod.json
           field: version
-          value: 1.1.0
+          value: ${{ github.event.release.tag_name }}
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -28,17 +28,19 @@ jobs:
 
       - name: Rename File
         run: |
-          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar; 
-          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-javadoc.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-javadoc.jar;
-          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-sources.jar ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-sources.jar;
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug.jar ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}.jar; 
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-javadoc.jar ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}-javadoc.jar;
+          mv ${{ github.workspace }}/build/libs/Quill-Notifications-debug-sources.jar ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}-sources.jar;
 
       - name: Publish Release
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
-            ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}.jar
-            ${{ github.workspace }}/Quill-Notifications-${{ github.ref_name }}-javadoc.jar
-            ${{ github.workspace }}/Quill-Notifications-{{ github.ref_name }}-sources.jar
+            ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}.jar
+            ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}-javadoc.jar
+            ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}-sources.jar
             java: 17
           java: 17
+          game-versions: |
+            >=1.16.5

@@ -20,10 +20,8 @@ public class NotifyCommand {
         commandDispatcher.register(
                 CommandManager.literal("notify")
                         .then(CommandManager.argument("player", GameProfileArgumentType.gameProfile()).suggests((context, builder) -> {
-                            PlayerManager playerManager = ((ServerCommandSource) context.getSource()).getServer().getPlayerManager();
-                            return CommandSource.suggestMatching(playerManager.getPlayerList().stream().map((player -> {
-                                return player.getGameProfile().getName();
-                            })), builder);
+                            PlayerManager playerManager = context.getSource().getServer().getPlayerManager();
+                            return CommandSource.suggestMatching(playerManager.getPlayerList().stream().map((player -> player.getGameProfile().getName())), builder);
                         }).then(CommandManager.argument("message", MessageArgumentType.message()).executes(context -> notify(context, GameProfileArgumentType.getProfileArgument(context, "player"), MessageArgumentType.getMessage(context, "message"))))));
     }
 
