@@ -1,5 +1,6 @@
 package me.electrobrine.quill_notifications;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +14,12 @@ import net.minecraft.text.MutableText;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static me.electrobrine.quill_notifications.QuillNotifications.mailbox;
+import static me.electrobrine.quill_notifications.QuillNotifications.players;
+
 @AllArgsConstructor
 public class Notification {
+    private int databaseID = -1;
     @Getter
     private final UUID uuid;
     private ServerPlayerEntity player;
@@ -47,5 +52,13 @@ public class Notification {
     public ServerPlayerEntity getPlayerEntity() {
         if (this.player == null) this.player = QuillNotifications.playerManager.get(this.getUuid());
         return player;
+    }
+
+    public void cancel() {
+        if (this.databaseID == -1) return;
+        mailbox.drop(this.databaseID);
+        JsonArray newMessages = ((JsonArray) players.get(this.uuid).getJson("messages")).deepCopy();
+        newMessages.remove(this.databaseID);
+        players.get(this.uuid).put("messages", newMessages);
     }
 }

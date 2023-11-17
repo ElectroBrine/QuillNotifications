@@ -99,7 +99,7 @@ public class NotificationBuilder {
         else if (this.componentMessage != null) {
             message = (MutableText) FabricAudiences.nonWrappingSerializer().serialize(componentMessage);
         }
-        return new Notification(uuid, null, message, FabricAudiences.nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay);
+        return new Notification(-1, uuid, null, message, FabricAudiences.nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay);
     }
 
     public void send() {

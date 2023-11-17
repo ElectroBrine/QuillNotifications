@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("maven.modrinth:quill:1.1.2")
+    modImplementation("maven.modrinth:quill:1.1.4")
     // adventure api is not strictly necessary but is helpful and allow you to use Component messages
     modImplementation include("net.kyori:adventure-platform-fabric:5.10.0")
 }
@@ -46,6 +46,10 @@ Notification notification = NotificationBuilder.Notification(receiverUUID) // In
     .setCommandDelay(10, TimeUnit.SECONDS) // set a delay that your commands will delayed for after the notification is sent (you can also pass in just a number for the ammount of millies to delay by)
     .build();
 Pigeon.send(notification); // send the notification to the player
+
+for (Notification message: QuillNotifications.getNotifications(receiverUUID)) { // get all pending notifications for a player (notifications are in order of oldest to newest)
+    if (notification.getMessage().toString().equals("Test message plz delete")) message.cancel() // cancel a notification before it gets sent to the player
+}
 ```
 
 ### Event System

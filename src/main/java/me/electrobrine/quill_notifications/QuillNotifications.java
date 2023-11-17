@@ -10,6 +10,7 @@ import me.mrnavastar.sqlib.sql.SQLDataType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.kyori.adventure.platform.fabric.FabricAudiences;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import org.apache.logging.log4j.Level;
@@ -64,8 +65,7 @@ public class QuillNotifications implements ModInitializer {
                 }
                 notification.setCommandDelay(messageData.getLong("commandDelay"));
                 notification.send();
-                notification.build().getPlayerEntity().getName().getString();
-                mailbox.drop(message.getAsInt());
+                mailbox.drop(messageData);
                 JsonArray newMessages = messages.deepCopy();
                 newMessages.remove(message);
                 data.put("messages", newMessages);
@@ -78,6 +78,31 @@ public class QuillNotifications implements ModInitializer {
     }
     private static void log(String message, Level level) {
         LogManager.getLogger().log(level, "[Quill Notifications] " + message);
+    }
+
+    public static ArrayList<Notification> getNotifications(UUID uuid) {
+        DataContainer player = players.get(uuid);
+        JsonArray pendingMessages = (JsonArray) player.getJson("messages");
+        ArrayList<Notification> notifications = new ArrayList<>();
+        for (JsonElement pendingMessage : pendingMessages) {
+            DataContainer notificationData = mailbox.get(pendingMessage.getAsInt());
+            ArrayList<String> stringCommands = new ArrayList<>();
+            for (JsonElement command : (JsonArray) notificationData.getJson("commands")) {
+                stringCommands.add(command.getAsString());
+            }
+            Notification notification = new Notification(
+                            pendingMessage.getAsInt(),
+                            notificationData.getUUID("uuid"),
+                            null,
+                            notificationData.getMutableText("text"),
+                            FabricAudiences.nonWrappingSerializer().deserialize(notificationData.getMutableText("text")),
+                            notificationData.getJson("metadata"),
+                            SoundEvent.of(notificationData.getIdentifier("sound")),
+                            stringCommands,
+                            notificationData.getLong("commandDelay"));
+            notifications.add(notification);
+        }
+        return notifications;
     }
 }
 
