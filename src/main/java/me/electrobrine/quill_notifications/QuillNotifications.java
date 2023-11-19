@@ -94,7 +94,7 @@ public class QuillNotifications implements ModInitializer {
             }
             Notification notification = new Notification(
                             pendingMessage.getAsInt(),
-                            notificationData.getUUID("uuid"),
+                            uuid,
                             null,
                             notificationData.getMutableText("text"),
                             FabricAudiences.nonWrappingSerializer().deserialize(notificationData.getMutableText("text")),
