@@ -82,7 +82,9 @@ public class QuillNotifications implements ModInitializer {
 
     public static ArrayList<Notification> getNotifications(UUID uuid) {
         DataContainer player = players.get(uuid);
+        if (player == null) return new ArrayList<>();
         JsonArray pendingMessages = (JsonArray) player.getJson("messages");
+        if (pendingMessages.isEmpty()) return new ArrayList<>();
         ArrayList<Notification> notifications = new ArrayList<>();
         for (JsonElement pendingMessage : pendingMessages) {
             DataContainer notificationData = mailbox.get(pendingMessage.getAsInt());
