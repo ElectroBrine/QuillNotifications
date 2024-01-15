@@ -31,8 +31,8 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation("maven.modrinth:sqlib:2.2.2")
-    modImplementation include("net.kyori:adventure-platform-fabric:5.10.0")
+    modImplementation("maven.modrinth:sqlib:2.2.7")
+    modImplementation include("net.kyori:adventure-platform-fabric:5.11.0-SNAPSHOT")
 
     //dev stuff because MrNavaStar bullies me, please send help
     modImplementation("maven.modrinth:easy-eula:1.0.0")
