@@ -7,7 +7,7 @@
 A small Library mod to handle sending notifications to players both online and offline with style!
 
 # Usage
-This mod requires both [Fabric API](https://modrinth.com/mod/fabric-api), [SQLib](https://modrinth.com/mod/sqlib), and [Micro Config](https://github.com/SilverAndro/Microconfig).
+This mod requires both [Fabric API](https://modrinth.com/mod/fabric-api), and [SQLib](https://modrinth.com/mod/sqlib).
 
 Use of [Adventure API](https://docs.advntr.dev/index.html) is not required but encouraged.
 
