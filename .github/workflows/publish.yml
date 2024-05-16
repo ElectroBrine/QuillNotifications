@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Set Version
         uses: jossef/action-set-json-field@v2.1
@@ -40,9 +40,11 @@ jobs:
             ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}.jar
             ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}-javadoc.jar
             ${{ github.workspace }}/Quill-Notifications-${{ github.event.release.tag_name }}-sources.jar
-            java: 17
-          java: 17
+            java: 21
+          java: 21
           game-versions: |
+            1.20.6
+            1.20.5
             1.20.4
             1.20.3
             1.20.2
