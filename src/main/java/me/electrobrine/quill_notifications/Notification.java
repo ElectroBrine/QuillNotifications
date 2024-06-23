@@ -39,6 +39,10 @@ public class Notification {
     @Setter
     @Getter
     private long commandDelay;
+    @Getter
+    private long expiry;
+    @Getter
+    private long creationTime;
 
     public void setMessage(MutableText newMessage) {
         this.message = newMessage;

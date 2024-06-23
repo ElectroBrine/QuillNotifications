@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("maven.modrinth:quill:1.1.10")
+    modImplementation("maven.modrinth:quill:1.2.0")
     // adventure api is not strictly necessary but is helpful and allow you to use Component messages
     modImplementation include("net.kyori:adventure-platform-fabric:5.14.0")
 }
@@ -44,6 +44,7 @@ Notification notification = NotificationBuilder.Notification(receiverUUID) // In
     .setSound(SoundEvents.BLOCK_BELL_USE) // set a soundevent to be played when notification is received
     .setCommands(commandString, commandString2) // set commands to be run when the notification is received
     .setCommandDelay(10, TimeUnit.SECONDS) // set a delay that your commands will delayed for after the notification is sent (you can also pass in just a number for the ammount of millies to delay by)
+    .setExpiry(15, TimeUnit.MINUTES) // set a time from a message to expire, if the player doesnt come online before the expiry time elapes the notificaion will not be sent (you can also pass in just a number for the ammount of millies till expiry) 
     .build();
 Pigeon.send(notification); // send the notification to the player
 

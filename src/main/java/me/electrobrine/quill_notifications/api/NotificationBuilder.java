@@ -11,6 +11,7 @@ import net.minecraft.text.MutableText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +26,8 @@ public class NotificationBuilder {
     private SoundEvent sound = null;
     private final ArrayList<String> commands = new ArrayList<>();
     private long commandDelay = 0;
+    private long expiry = 0;
+    private final Long creationTime = new Date().getTime();
 
     public static NotificationBuilder Notification(UUID uuid) {
         return new NotificationBuilder(uuid);
@@ -92,6 +95,16 @@ public class NotificationBuilder {
         return this;
     }
 
+    public NotificationBuilder setExpiry(int amount, TimeUnit unit) {
+        this.expiry = unit.toMillis(amount);
+        return this;
+    }
+
+    public NotificationBuilder setExpiry(long timeMillis) {
+        this.expiry = timeMillis;
+        return this;
+    }
+
     public Notification build(){
         if (this.stringMessage != null) {
             message = Style.stylize(stringMessage, style);
@@ -99,7 +112,7 @@ public class NotificationBuilder {
         else if (this.componentMessage != null) {
             message = (MutableText) FabricAudiences.nonWrappingSerializer().serialize(componentMessage);
         }
-        return new Notification(-1, uuid, null, message, FabricAudiences.nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay);
+        return new Notification(-1, uuid, null, message, FabricAudiences.nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay, expiry, creationTime);
     }
 
     public void send() {

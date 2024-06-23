@@ -39,6 +39,8 @@ public class QuillNotifications implements ModInitializer {
                 .addColumn("sound", SQLDataType.IDENTIFIER)
                 .addColumn("commands", SQLDataType.JSON)
                 .addColumn("commandDelay", SQLDataType.LONG)
+                .addColumn("expiry", SQLDataType.LONG)
+                .addColumn("creationTime", SQLDataType.LONG)
                 .setAutoIncrement()
                 .finish();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> NotifyCommand.registerCommand(dispatcher));
@@ -101,7 +103,9 @@ public class QuillNotifications implements ModInitializer {
                             notificationData.getJson("metadata"),
                             SoundEvent.of(notificationData.getIdentifier("sound")),
                             stringCommands,
-                            notificationData.getLong("commandDelay"));
+                            notificationData.getLong("commandDelay"),
+                            notificationData.getLong("expiry"),
+                            notificationData.getLong("creationTime"));
             notifications.add(notification);
         }
         return notifications;

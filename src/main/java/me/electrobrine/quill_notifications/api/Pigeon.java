@@ -11,8 +11,8 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
+
 public class Pigeon {
 
     public static void send(Notification notification) {
@@ -22,6 +22,7 @@ public class Pigeon {
             store(notification);
             return;
         }
+        if (notification.getExpiry() != 0 && notification.getExpiry() + notification.getCreationTime() <= new Date().getTime()) notification.cancel();
         if (!QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(notification)) return;
         if (notification.getSound() != null)
             player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(notification.getSound()), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
@@ -47,6 +48,7 @@ public class Pigeon {
 
 
     private static void store(Notification notification) {
+        long time = new Date().getTime();
         DataContainer message = QuillNotifications.mailbox.createDataContainerAutoID();
         if (notification.getMessage() != null) {
             message.put("text", notification.getMessage());
@@ -65,6 +67,8 @@ public class Pigeon {
             message.put("commands", jsonCommands);
         }
         message.put("commandDelay", notification.getCommandDelay());
+        message.put("expiry", notification.getExpiry());
+        message.put("creationTime", time);
         DataContainer player = QuillNotifications.players.getOrCreateDataContainer(notification.getUuid());
         JsonArray messages = (JsonArray) player.getJson("messages");
         if (messages == null) messages = new JsonArray();
