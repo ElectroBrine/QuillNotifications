@@ -22,7 +22,10 @@ public class Pigeon {
             store(notification);
             return;
         }
-        if (notification.getExpiry() != 0 && notification.getExpiry() + notification.getCreationTime() <= new Date().getTime()) notification.cancel();
+        if (notification.getExpiry() != 0 && notification.getExpiry() + notification.getCreationTime() <= new Date().getTime()) {
+            notification.cancel();
+            return;
+        }
         if (!QuillEvents.PRE_SEND_NOTIFICATION.invoker().trigger(notification)) return;
         if (notification.getSound() != null)
             player.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(notification.getSound()), SoundCategory.MASTER, player.getX(), player.getY(), player.getZ(), 1, 1, player.getWorld().getRandom().nextLong()));
