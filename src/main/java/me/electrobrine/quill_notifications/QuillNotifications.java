@@ -37,7 +37,7 @@ public class QuillNotifications implements ModInitializer {
             NotificationBuilder notification = new NotificationBuilder(playerUUID);
             mailbox.getContainers("receiver", playerUUID).forEach(message -> {
                 notification.setMessage((MutableText) message.get(MinecraftTypes.TEXT, "text"));
-                notification.setSound(SoundEvent.of(message.get(MinecraftTypes.IDENTIFIER, "sound")));
+                notification.setSound(message.get(MinecraftTypes.SOUND, "sound"));
                 notification.setMetadata(message.get(MinecraftTypes.JSON, "metadata"));
                 ArrayList<String> stringCommands = new ArrayList<>();
                 for (JsonElement command : (JsonArray) message.get(MinecraftTypes.JSON, "commands")) {
@@ -72,7 +72,7 @@ public class QuillNotifications implements ModInitializer {
                     (MutableText) container.get(MinecraftTypes.TEXT, "text"),
                     FabricAudiences.nonWrappingSerializer().deserialize(container.get(MinecraftTypes.TEXT, "text")),
                     container.get(MinecraftTypes.JSON, "metadata"),
-                    SoundEvent.of(container.get(MinecraftTypes.IDENTIFIER, "sound")),
+                    container.get(MinecraftTypes.SOUND, "sound"),
                     stringCommands,
                     container.get(JavaTypes.LONG, "commandDelay"),
                     container.get(JavaTypes.LONG, "expiry"),

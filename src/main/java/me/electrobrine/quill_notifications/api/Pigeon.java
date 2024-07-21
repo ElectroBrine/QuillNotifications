@@ -63,7 +63,7 @@ public class Pigeon {
             message.put(MinecraftTypes.JSON, "metadata", notification.getMetadata());
         }
         if (notification.getSound() != null) {
-            message.put(MinecraftTypes.IDENTIFIER, "sound", notification.getSound().getId());
+            message.put(MinecraftTypes.SOUND, "sound", notification.getSound());
         }
         if (notification.getCommands() != null) {
             JsonArray jsonCommands = new JsonArray();
