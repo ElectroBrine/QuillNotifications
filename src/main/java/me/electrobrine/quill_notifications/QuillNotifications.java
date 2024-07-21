@@ -3,75 +3,51 @@ package me.electrobrine.quill_notifications;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import me.electrobrine.quill_notifications.api.NotificationBuilder;
-import me.mrnavastar.sqlib.DataContainer;
 import me.mrnavastar.sqlib.SQLib;
-import me.mrnavastar.sqlib.Table;
-import me.mrnavastar.sqlib.sql.SQLDataType;
+import me.mrnavastar.sqlib.api.DataContainer;
+import me.mrnavastar.sqlib.api.DataStore;
+import me.mrnavastar.sqlib.api.types.JavaTypes;
+import me.mrnavastar.sqlib.api.types.MinecraftTypes;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.kyori.adventure.platform.fabric.FabricAudiences;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.MutableText;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class QuillNotifications implements ModInitializer {
     /**
      * Runs the mod initializer.
      */
-    public static Table players;
-    public static Table mailbox;
+    public static DataStore mailbox = SQLib.getDatabase().dataStore("Quill", "Messages");
     public static HashMap<UUID, ServerPlayerEntity> playerManager = new HashMap<>();
     @Override
     public void onInitialize() {
         log("dipping the ink quill", Level.INFO);
-        players = SQLib.getDatabase().createTable("Quill","Notifications")
-                .addColumn("messages", SQLDataType.JSON)
-                .finish();
-        mailbox = SQLib.getDatabase().createTable("Quill", "messages")
-                .addColumn("text", SQLDataType.MUTABLE_TEXT)
-                .addColumn("metadata", SQLDataType.JSON)
-                .addColumn("sound", SQLDataType.IDENTIFIER)
-                .addColumn("commands", SQLDataType.JSON)
-                .addColumn("commandDelay", SQLDataType.LONG)
-                .addColumn("expiry", SQLDataType.LONG)
-                .addColumn("creationTime", SQLDataType.LONG)
-                .setAutoIncrement()
-                .finish();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> NotifyCommand.registerCommand(dispatcher));
         ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             UUID playerUUID = player.getUuid();
             playerManager.put(playerUUID, player);
-            DataContainer data = players.get(playerUUID);
-            if (data == null) return;
             NotificationBuilder notification = new NotificationBuilder(playerUUID);
-            JsonArray messages = (JsonArray) data.getJson("messages");
-            if (messages == null) return;
-            for (JsonElement message : messages) {
-                DataContainer messageData = mailbox.get(message.getAsInt());
-                if (messageData.getMutableText("text") != null) notification.setMessage(messageData.getMutableText("text"));
-                if (messageData.getIdentifier("sound") != null) notification.setSound(SoundEvent.of(messageData.getIdentifier("sound")));
-                if (messageData.getJson("metadata") != null) notification.setMetadata(messageData.getJson("metadata"));
-                if (messageData.getJson("commands") != null) {
-                    ArrayList<String> stringCommands = new ArrayList<>();
-                    for (JsonElement command : (JsonArray) messageData.getJson("commands")) {
-                        stringCommands.add(command.getAsString());
-                    }
-                    notification.setCommands(stringCommands.toArray(String[] :: new));
+            mailbox.getContainers("receiver", playerUUID).forEach(message -> {
+                notification.setMessage((MutableText) message.get(MinecraftTypes.TEXT, "text"));
+                notification.setSound(SoundEvent.of(message.get(MinecraftTypes.IDENTIFIER, "sound")));
+                notification.setMetadata(message.get(MinecraftTypes.JSON, "metadata"));
+                ArrayList<String> stringCommands = new ArrayList<>();
+                for (JsonElement command : (JsonArray) message.get(MinecraftTypes.JSON, "commands")) {
+                    stringCommands.add(command.getAsString());
                 }
-                notification.setCommandDelay(messageData.getLong("commandDelay"));
+                notification.setCommands(stringCommands.toArray(String[] :: new));
+                notification.setCommandDelay(message.get(JavaTypes.LONG, "commandDelay"));
                 notification.send();
-                mailbox.drop(messageData);
-                JsonArray newMessages = messages.deepCopy();
-                newMessages.remove(message);
-                data.put("messages", newMessages);
-            }
+                mailbox.getContainer(message.getId()).ifPresent(DataContainer::delete);
+            });
         }));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             UUID playerUUID = handler.getPlayer().getUuid();
@@ -83,31 +59,26 @@ public class QuillNotifications implements ModInitializer {
     }
 
     public static ArrayList<Notification> getNotifications(UUID uuid) {
-        DataContainer player = players.get(uuid);
-        if (player == null) return new ArrayList<>();
-        JsonArray pendingMessages = (JsonArray) player.getJson("messages");
-        if (pendingMessages.isEmpty()) return new ArrayList<>();
         ArrayList<Notification> notifications = new ArrayList<>();
-        for (JsonElement pendingMessage : pendingMessages) {
-            DataContainer notificationData = mailbox.get(pendingMessage.getAsInt());
+        mailbox.getContainers("receiver", uuid).forEach(container -> {
             ArrayList<String> stringCommands = new ArrayList<>();
-            for (JsonElement command : (JsonArray) notificationData.getJson("commands")) {
+            for (JsonElement command : (JsonArray) container.get(MinecraftTypes.JSON, "commands")) {
                 stringCommands.add(command.getAsString());
             }
             Notification notification = new Notification(
-                            pendingMessage.getAsInt(),
-                            uuid,
-                            null,
-                            notificationData.getMutableText("text"),
-                            FabricAudiences.nonWrappingSerializer().deserialize(notificationData.getMutableText("text")),
-                            notificationData.getJson("metadata"),
-                            SoundEvent.of(notificationData.getIdentifier("sound")),
-                            stringCommands,
-                            notificationData.getLong("commandDelay"),
-                            notificationData.getLong("expiry"),
-                            notificationData.getLong("creationTime"));
+                    container.getId(),
+                    uuid,
+                    null,
+                    (MutableText) container.get(MinecraftTypes.TEXT, "text"),
+                    FabricAudiences.nonWrappingSerializer().deserialize(container.get(MinecraftTypes.TEXT, "text")),
+                    container.get(MinecraftTypes.JSON, "metadata"),
+                    SoundEvent.of(container.get(MinecraftTypes.IDENTIFIER, "sound")),
+                    stringCommands,
+                    container.get(JavaTypes.LONG, "commandDelay"),
+                    container.get(JavaTypes.LONG, "expiry"),
+                    container.get(JavaTypes.LONG, "creationTime"));
             notifications.add(notification);
-        }
+        });
         return notifications;
     }
 }

@@ -3,7 +3,9 @@ package me.electrobrine.quill_notifications.api;
 import com.google.gson.JsonArray;
 import me.electrobrine.quill_notifications.Notification;
 import me.electrobrine.quill_notifications.QuillNotifications;
-import me.mrnavastar.sqlib.DataContainer;
+import me.mrnavastar.sqlib.api.DataContainer;
+import me.mrnavastar.sqlib.api.types.JavaTypes;
+import me.mrnavastar.sqlib.api.types.MinecraftTypes;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.MinecraftServer;
@@ -52,30 +54,26 @@ public class Pigeon {
 
     private static void store(Notification notification) {
         long time = new Date().getTime();
-        DataContainer message = QuillNotifications.mailbox.createDataContainerAutoID();
+        DataContainer message = QuillNotifications.mailbox.createContainer();
+        message.put(JavaTypes.UUID, "receiver", notification.getUuid());
         if (notification.getMessage() != null) {
-            message.put("text", notification.getMessage());
+            message.put(MinecraftTypes.TEXT, "text", notification.getMessage());
         }
         if (notification.getMetadata() != null) {
-            message.put("metadata", notification.getMetadata());
+            message.put(MinecraftTypes.JSON, "metadata", notification.getMetadata());
         }
         if (notification.getSound() != null) {
-            message.put("sound", notification.getSound().getId());
+            message.put(MinecraftTypes.IDENTIFIER, "sound", notification.getSound().getId());
         }
         if (notification.getCommands() != null) {
             JsonArray jsonCommands = new JsonArray();
             for (String command : notification.getCommands()) {
                 jsonCommands.add(command);
             }
-            message.put("commands", jsonCommands);
+            message.put(MinecraftTypes.JSON, "commands", jsonCommands);
         }
-        message.put("commandDelay", notification.getCommandDelay());
-        message.put("expiry", notification.getExpiry());
-        message.put("creationTime", time);
-        DataContainer player = QuillNotifications.players.getOrCreateDataContainer(notification.getUuid());
-        JsonArray messages = (JsonArray) player.getJson("messages");
-        if (messages == null) messages = new JsonArray();
-        messages.add(message.getIdAsInt());
-        player.put("messages", messages);
+        message.put(JavaTypes.LONG, "commandDelay", notification.getCommandDelay());
+        message.put(JavaTypes.LONG,"expiry", notification.getExpiry());
+        message.put(JavaTypes.LONG, "creationTime", time);
     }
 }

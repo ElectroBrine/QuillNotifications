@@ -1,10 +1,10 @@
 package me.electrobrine.quill_notifications;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import me.mrnavastar.sqlib.api.DataContainer;
 import net.kyori.adventure.platform.fabric.FabricAudiences;
 import net.kyori.adventure.text.Component;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static me.electrobrine.quill_notifications.QuillNotifications.mailbox;
-import static me.electrobrine.quill_notifications.QuillNotifications.players;
 
 @AllArgsConstructor
 public class Notification {
@@ -60,14 +59,6 @@ public class Notification {
 
     public void cancel() {
         if (this.databaseID == -1) return;
-        mailbox.drop(this.databaseID);
-        JsonArray newMessages = ((JsonArray) players.get(this.uuid).getJson("messages"));
-        int i = 0;
-        for (JsonElement message : newMessages) {
-            if (message.getAsInt() == databaseID) break;
-            i++;
-        }
-        newMessages.remove(i);
-        players.get(this.uuid).put("messages", newMessages);
+        mailbox.getContainer(databaseID).ifPresent(DataContainer::delete);
     }
 }
