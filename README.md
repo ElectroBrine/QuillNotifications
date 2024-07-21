@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("maven.modrinth:quill:1.2.1")
+    modImplementation("maven.modrinth:quill:1.2.2")
     // adventure api is not strictly necessary but is helpful and allow you to use Component messages
     modImplementation include("net.kyori:adventure-platform-fabric:5.14.0")
 }
