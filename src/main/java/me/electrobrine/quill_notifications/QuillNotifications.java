@@ -2,7 +2,9 @@ package me.electrobrine.quill_notifications;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import me.electrobrine.quill_notifications.api.NotificationBuilder;
+import me.electrobrine.quill_notifications.api.Scribe;
 import me.mrnavastar.sqlib.SQLib;
 import me.mrnavastar.sqlib.api.DataContainer;
 import me.mrnavastar.sqlib.api.DataStore;
@@ -12,8 +14,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.kyori.adventure.platform.fabric.FabricAudiences;
+import net.minecraft.block.entity.VaultBlockEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +49,7 @@ public class QuillNotifications implements ModInitializer {
                 }
                 notification.setCommands(stringCommands.toArray(String[] :: new));
                 notification.setCommandDelay(message.get(JavaTypes.LONG, "commandDelay"));
+                notification.setExpiry(message.get(JavaTypes.LONG, "expiry"));
                 notification.send();
                 mailbox.getContainer(message.getId()).ifPresent(DataContainer::delete);
             });

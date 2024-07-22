@@ -73,6 +73,7 @@ public class Pigeon {
             message.put(MinecraftTypes.JSON, "commands", jsonCommands);
         }
         message.put(JavaTypes.LONG, "commandDelay", notification.getCommandDelay());
+
         message.put(JavaTypes.LONG,"expiry", notification.getExpiry());
         message.put(JavaTypes.LONG, "creationTime", time);
     }
