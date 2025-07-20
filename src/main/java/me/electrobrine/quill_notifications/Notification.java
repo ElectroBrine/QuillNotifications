@@ -5,16 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import me.mrnavastar.sqlib.api.DataContainer;
-import net.kyori.adventure.platform.fabric.FabricAudiences;
+import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.kyori.adventure.text.Component;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 import static me.electrobrine.quill_notifications.QuillNotifications.mailbox;
+import static me.electrobrine.quill_notifications.QuillNotifications.server;
 
 @AllArgsConstructor
 public class Notification {
@@ -25,7 +27,7 @@ public class Notification {
     @Getter
     private MutableText message;
     @Getter
-    private Component component;
+    private @NotNull Component component;
     @Setter
     @Getter
     private JsonElement metadata;
@@ -37,20 +39,20 @@ public class Notification {
     private ArrayList<String> commands;
     @Setter
     @Getter
-    private long commandDelay;
+    private Long commandDelay;
     @Getter
-    private long expiry;
+    private Long expiry;
     @Getter
-    private long creationTime;
+    private Long creationTime;
 
     public void setMessage(MutableText newMessage) {
         this.message = newMessage;
-        this.component = FabricAudiences.nonWrappingSerializer().deserialize(newMessage);
+        this.component = MinecraftServerAudiences.of(server).nonWrappingSerializer().deserialize(newMessage);
     }
 
     public void setComponent(Component newComponent) {
         this.component = newComponent;
-        this.message = (MutableText) FabricAudiences.nonWrappingSerializer().serialize(newComponent);
+        this.message = (MutableText) MinecraftServerAudiences.of(server).nonWrappingSerializer();
     }
     public ServerPlayerEntity getPlayerEntity() {
         if (this.player == null) this.player = QuillNotifications.playerManager.get(this.getUuid());

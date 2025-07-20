@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import me.electrobrine.quill_notifications.Notification;
 import me.electrobrine.quill_notifications.QuillNotifications;
 import me.mrnavastar.sqlib.api.DataContainer;
+import me.mrnavastar.sqlib.api.types.GsonTypes;
 import me.mrnavastar.sqlib.api.types.JavaTypes;
 import me.mrnavastar.sqlib.api.types.MinecraftTypes;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
@@ -60,7 +61,7 @@ public class Pigeon {
             message.put(MinecraftTypes.TEXT, "text", notification.getMessage());
         }
         if (notification.getMetadata() != null) {
-            message.put(MinecraftTypes.JSON, "metadata", notification.getMetadata());
+            message.put(GsonTypes.ELEMENT, "metadata", notification.getMetadata());
         }
         if (notification.getSound() != null) {
             message.put(MinecraftTypes.SOUND, "sound", notification.getSound());
@@ -70,7 +71,7 @@ public class Pigeon {
             for (String command : notification.getCommands()) {
                 jsonCommands.add(command);
             }
-            message.put(MinecraftTypes.JSON, "commands", jsonCommands);
+            message.put(GsonTypes.ELEMENT, "commands", jsonCommands);
         }
         message.put(JavaTypes.LONG, "commandDelay", notification.getCommandDelay());
         message.put(JavaTypes.LONG,"expiry", notification.getExpiry());

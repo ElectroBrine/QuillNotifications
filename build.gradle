@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'io.freefair.lombok' version '8.4'
@@ -31,11 +31,11 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation("maven.modrinth:sqlib:3.1.4")
-    modImplementation include("net.kyori:adventure-platform-fabric:5.14.0")
+    modImplementation("maven.modrinth:sqlib:3.2.9")
+    modImplementation include("net.kyori:adventure-platform-fabric:6.4.0")
 
     //dev stuff because MrNavaStar bullies me, please send help
-    modImplementation("maven.modrinth:easy-eula:1.1.0-fabric")
+    modImplementation("maven.modrinth:easy-eula:1.1.1-fabric")
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
 }

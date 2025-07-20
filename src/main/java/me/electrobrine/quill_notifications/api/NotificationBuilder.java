@@ -4,16 +4,17 @@ import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import me.electrobrine.quill_notifications.Notification;
 import me.electrobrine.quill_notifications.Style;
-import net.kyori.adventure.platform.fabric.FabricAudiences;
+import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.kyori.adventure.text.Component;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static me.electrobrine.quill_notifications.QuillNotifications.server;
 
 @RequiredArgsConstructor
 public class NotificationBuilder {
@@ -110,9 +111,9 @@ public class NotificationBuilder {
             message = Style.stylize(stringMessage, style);
         }
         else if (this.componentMessage != null) {
-            message = (MutableText) FabricAudiences.nonWrappingSerializer().serialize(componentMessage);
+            message = (MutableText) MinecraftServerAudiences.of(server).nonWrappingSerializer().serialize(componentMessage);
         }
-        return new Notification(-1, uuid, null, message, FabricAudiences.nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay, expiry, creationTime);
+        return new Notification(-1, uuid, null, message, MinecraftServerAudiences.of(server).nonWrappingSerializer().deserialize(message), metadata, sound, commands, commandDelay, expiry, creationTime);
     }
 
     public void send() {
